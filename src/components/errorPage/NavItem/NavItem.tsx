@@ -1,6 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import { NoteType } from "../../../redux/notes/notesReducer";
+import { NoteType } from "../../../redux/reducers/notesReducer";
 
 type PropsType = {
   item: NoteType;

@@ -20,6 +20,7 @@ type StateType = {
   isInitialized: boolean;
   currentNote: NoteType | null;
   createMode: boolean;
+  searchResult: NoteType[] | null;
 };
 
 const initialState: StateType = {
@@ -46,6 +47,7 @@ const initialState: StateType = {
   isInitialized: false,
   currentNote: null,
   createMode: false,
+  searchResult: [],
 };
 
 export const notesReducer = (
@@ -139,10 +141,48 @@ export const notesReducer = (
         currentNote: null,
         createMode: false,
       };
+    case "NOTES-SEARCH":
+      return {
+        ...state,
+        searchResult: state.notes
+          ? state.notes.filter((note) => {
+              let condition;
+              switch (action.where) {
+                case "all":
+                  condition =
+                    note.importantOccasion.includes(action.text) ||
+                    note.theDayGoodThings.includes(action.text) ||
+                    note.insights.includes(action.text) ||
+                    note.mood.includes(action.text);
+                  break;
+                case "mood":
+                  condition = note.mood.includes(action.text);
+                  break;
+                case "importantOccasion":
+                  condition = note.importantOccasion.includes(action.text);
+                  break;
+                case "theDayGoodThings":
+                  condition = note.theDayGoodThings.includes(action.text);
+                  break;
+                case "insights":
+                  condition = note.insights.includes(action.text);
+                  break;
+              }
+              if (condition) return note;
+            })
+          : [],
+      };
     default:
       return state;
   }
 };
+
+export type SearchWhereType =
+  | "all"
+  | "mood"
+  | "importantOccasion"
+  | "theDayGoodThings"
+  | "insights";
 
 export const notesActions = {
   initialize: () => ({
@@ -194,6 +234,11 @@ export const notesActions = {
   removeNote: (id: number) => ({
     type: "NOTES-REMOVE-NOTE" as const,
     id,
+  }),
+  search: (text: string, where: SearchWhereType) => ({
+    type: "NOTES-SEARCH" as const,
+    text,
+    where,
   }),
 };
 

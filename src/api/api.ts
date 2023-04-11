@@ -1,4 +1,4 @@
-import { NoteType } from "../redux/notes/notesReducer";
+import { NoteType } from "../redux/reducers/notesReducer";
 
 export const apiLocalStorage = {
   getAllNotes: (): Array<NoteType> | null => {

@@ -15,10 +15,11 @@ import {
   initializeApp,
   notesActions,
   NoteType,
-} from "./redux/notes/notesReducer";
+} from "./redux/reducers/notesReducer";
 import c from "classnames";
 import NavItem from "./components/errorPage/NavItem/NavItem";
-import { getFavoriteNotesSuperSelector, getIsInitializedSelector, getNotesSelector } from "./redux/notes/notesSelectors";
+import { getFavoriteNotesSuperSelector, getIsInitializedSelector, getNotesSelector } from "./redux/selectors/notesSelectors";
+import SearchBlock from "./components/errorPage/SearchBlock/SearchBlock";
 
 type MSTPropsType = {
   notes: Array<NoteType> | null;
@@ -81,6 +82,7 @@ const Root: React.FC<PropsType> = ({
         </ul>
       </nav>
       <main className={s.main}>
+            <SearchBlock/>
         <p className="appDiscription">
           Lorem ipsum dolor sit, amet consectetur adipisicing elit. Mollitia
           deleniti pariatur rerum fugit assumenda eligendi

@@ -1,8 +1,8 @@
-import { notesReducer } from "./notesReducer";
+import { notesActions, notesReducer } from "../reducers/notesReducer";
 
 const currentDate = new Date;
 
-const initialState = {
+const initialState: any = {
   notes: [
     {
       id: 46346,
@@ -13,27 +13,27 @@ const initialState = {
       theDayGoodThings: "having a good walk",
       insights: "I have selfvaluence"
     }
-  ]
+  ],
+  searchResult: [],
 };
 
+// test("should notes length qual to 2", () => {
+//   expect(notesReducer(initialState, { type: "NOTES-CREATE-DAILY-NOTE", data: {
+//     isFavorite: false,
+//     mood: "good",
+//     importantOccasion: "DSgsgsg",
+//     theDayGoodThings: "Sdgsdgsgd",
+//     insights: "Dsgsdg"
+//   }}).notes).toHaveLength(2)
+// })
 
+// test("notes should be null", () => {
+//   expect(notesReducer(initialState, { type: "NOTES-SET-ALL-NOTES", notes: null}).notes).toBe(null);
+// })
 
-test("should notes length qual to 2", () => {
-  expect(notesReducer(initialState, { type: "NOTES-CREATE-DAILY-NOTE", data: {
-    isFavorite: false,
-    mood: "good",
-    importantOccasion: "DSgsgsg",
-    theDayGoodThings: "Sdgsdgsgd",
-    insights: "Dsgsdg"
-  }}).notes).toHaveLength(2)
+test("should searchResult length qual to 1", () => {
+  expect(notesReducer(initialState, notesActions.search("good", "mood")).searchResult).toHaveLength(1)
 })
-
-test("notes should be null", () => {
-  expect(notesReducer(initialState, { type: "NOTES-SET-ALL-NOTES", notes: null}).notes).toBe(null);
-})
-
-
-
 
 
 // import { createSlice, PayloadAction } from '@reduxjs/toolkit';

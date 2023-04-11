@@ -10,12 +10,12 @@ import {
   addNewNote,
   removeNote,
   changeIsFavorite,
-} from "../../../redux/notes/notesReducer";
+} from "../../../redux/reducers/notesReducer";
 import {
   getCreateModeSelector,
   getCurrentNoteSelector,
   getNotesSelector,
-} from "../../../redux/notes/notesSelectors";
+} from "../../../redux/selectors/notesSelectors";
 import { AppStateType } from "../../../redux/store";
 import TextField from "./TextField/TextField";
 
