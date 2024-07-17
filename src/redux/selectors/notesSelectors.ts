@@ -1,5 +1,6 @@
-import { NoteType } from '../reducers/notesReducer';
+
 import { createSelector } from "reselect";
+import { NoteType } from "../../types/types";
 import { AppStateType } from "../store";
 
 export const getNotesSelector = (state: AppStateType) => (

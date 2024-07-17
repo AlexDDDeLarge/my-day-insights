@@ -1,0 +1,65 @@
+.header {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  grid-column-start: 1;
+  grid-column-end: 3;
+  grid-row-start: 1;
+  grid-row-end: 2;
+
+  border-bottom: 1px solid #000;
+  /* background-color: #7eff7a; */
+}
+
+.logo {
+  margin: 0 15px;
+}
+
+.headerButton {
+  width: 30px;
+  height: 30px;
+  padding: 0;
+  margin: 0 15px 0 0;
+  border: none;
+  cursor: pointer;
+  background-color: inherit;
+}
+
+.headerButtonSearch {
+  display: inline-block;
+  margin-left: auto;
+}
+
+.headerButtonSearch svg {
+  height: 90%;
+  width: 90%;
+}
+
+.searchIsOppened {
+  fill: #fa2d2d;
+}
+
+.favoriteButton {
+  background-color: inherit;
+  /* font-weight: bold;
+  font-size: 1.9rem;
+  text-decoration: underline; */
+}
+
+.favoriteButton svg {
+  width: 90%;
+  height: 90%;
+}
+
+.isFavoriteShown {
+  fill: #fa2d2d;
+}
+
+.showSidebarButton:hover {
+  fill: #fa2d2d;
+}
+
+.showSidebarButton svg {
+  width: 90%;
+  height: 90%;
+}

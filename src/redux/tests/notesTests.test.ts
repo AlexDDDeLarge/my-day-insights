@@ -1,4 +1,5 @@
-import { notesActions, notesReducer } from "../reducers/notesReducer";
+import { notesActions } from "../actions/notesActions";
+import {  notesReducer } from "../reducers/notesReducer";
 
 const currentDate = new Date;
 
@@ -17,19 +18,19 @@ const initialState: any = {
   searchResult: [],
 };
 
-// test("should notes length qual to 2", () => {
-//   expect(notesReducer(initialState, { type: "NOTES-CREATE-DAILY-NOTE", data: {
-//     isFavorite: false,
-//     mood: "good",
-//     importantOccasion: "DSgsgsg",
-//     theDayGoodThings: "Sdgsdgsgd",
-//     insights: "Dsgsdg"
-//   }}).notes).toHaveLength(2)
-// })
+test("should notes length qual to 2", () => {
+  expect(notesReducer(initialState, { type: "NOTES-CREATE-DAILY-NOTE", data: {
+    isFavorite: false,
+    mood: "good",
+    importantOccasion: "DSgsgsg",
+    theDayGoodThings: "Sdgsdgsgd",
+    insights: "Dsgsdg"
+  }}).notes).toHaveLength(2)
+})
 
-// test("notes should be null", () => {
-//   expect(notesReducer(initialState, { type: "NOTES-SET-ALL-NOTES", notes: null}).notes).toBe(null);
-// })
+test("notes should be null", () => {
+  expect(notesReducer(initialState, { type: "NOTES-SET-ALL-NOTES", notes: null}).notes).toBe(null);
+})
 
 test("should searchResult length qual to 1", () => {
   expect(notesReducer(initialState, notesActions.search("good", "mood")).searchResult).toHaveLength(1)

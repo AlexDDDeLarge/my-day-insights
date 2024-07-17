@@ -1,0 +1,12 @@
+.note {
+  padding: 10px 20px;
+}
+
+.moodSelect {
+  width: 150px;
+  padding: 5px;
+  border: none;
+  border-bottom: 1px solid #000;
+  font-weight: bold;
+  font-size: 1rem;
+}

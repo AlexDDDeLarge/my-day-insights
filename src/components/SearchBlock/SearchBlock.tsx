@@ -1,13 +1,10 @@
 import React from "react";
 import { useForm } from "react-hook-form";
 import { connect } from "react-redux";
-import {
-  notesActions,
-  NoteType,
-  SearchWhereType,
-} from "../../../redux/reducers/notesReducer";
-import { getSearchResultSeleector } from "../../../redux/selectors/notesSelectors";
-import { AppStateType } from "../../../redux/store";
+import { notesActions } from "../../redux/actions/notesActions";
+import { getSearchResultSeleector } from "../../redux/selectors/notesSelectors";
+import { AppStateType } from "../../redux/store";
+import { NoteType, SearchWhereType } from "../../types/types";
 import NavItem from "../NavItem/NavItem";
 
 type MSTPType = {

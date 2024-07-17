@@ -1,0 +1,21 @@
+.createBlock {
+  padding: 15px 0;
+  text-align: center;
+}
+
+.appDiscription {
+  max-width: 70%;
+  margin: 30px auto;
+}
+
+.addNewDailyNote {
+  padding: 5px 10px;
+  border: 1px solid #000000;
+  background-color: inherit;
+}
+
+.addNewDailyNote:hover {
+  border-color: #fa2d2d;
+  color: #fa2d2d;
+}
+

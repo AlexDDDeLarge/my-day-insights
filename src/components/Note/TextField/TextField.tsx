@@ -1,32 +1,52 @@
-import React from "react";
+import React, { useEffect } from "react";
+import s from "./TextField.module.css"
 
 type PropsType = {
-  question: string,
-  fieldValue: string,
-  register: any,
-  name: "importantOccasion" | "theDayGoodThings" | "insights",
-  errors: any,
-  editMode: boolean
-}
+  question: string;
+  fieldValue: string;
+  register: any;
+  name: "importantOccasion" | "theDayGoodThings" | "insights";
+  errors: any;
+  editMode: boolean;
+  setValue(name: string, value: unknown, config?: Object): void
+};
 
 const TextField: React.FC<PropsType> = ({
-  question, fieldValue, register, name, errors, editMode
+  question,
+  fieldValue,
+  register,
+  name,
+  errors,
+  editMode,
+  setValue,
 }) => {
+  useEffect(() => {
+    setValue(name, fieldValue);
+  }, [editMode]);
+
   return (
     <div>
       <h2 className="question">{question}</h2>
-      {(!fieldValue || editMode) ? (<>
-        <textarea defaultValue="" {...register(name, { required: "This is required." })} id=""></textarea>
-        <p>{errors[name]?.message}</p>
-      </>)
-      : <p>{fieldValue}</p>}
+      {!fieldValue || editMode ? (
+        <>
+          <textarea
+            defaultValue=""
+            {...register(name, { required: "This is required." })}
+            id=""
+          ></textarea>
+          <p>{errors[name]?.message}</p>
+        </>
+      ) : (
+        <p className={s.text}>{fieldValue}</p>
+      )}
     </div>
-  )
-}
+  );
+};
 
 export default TextField;
 
-{/* <h2 className="importantOccasion Question">What important thing happened today?</h2>
+{
+  /* <h2 className="importantOccasion Question">What important thing happened today?</h2>
 {!importantOccasion ? (<>
   <textarea defaultValue="" {...register("importantOccasion", { required: "This is required." })} id=""></textarea>
   <p>{errors.importantOccasion?.message}</p>
@@ -47,4 +67,5 @@ export default TextField;
   <textarea defaultValue="" {...register("insights", {required: "This is required."})} id=""></textarea>
   <p>{errors.insights?.message}</p>
 </>)
-: <p>{insights}</p>} */}
+: <p>{insights}</p>} */
+}

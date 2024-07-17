@@ -1,0 +1,33 @@
+.link:active,
+.link:visited,
+a:link {
+  text-decoration: none;
+  color: inherit;
+}
+
+.link {
+  display: block;
+  width: 100%;
+  margin-bottom: 10px;
+  padding: 0 0 10px;
+  border-bottom: 1px solid #000;
+}
+
+.emoji {
+  transition: font-size 0.45s;
+}
+
+.link:hover .emoji {
+  font-size: 1.4rem;
+}
+
+@media screen and (max-width: 768px) {
+  .link {
+    text-align: center;
+    font-size: 1.4rem;
+  }
+
+  .link:hover .emoji {
+    font-size: 1.8rem;
+  }
+}

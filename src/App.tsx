@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from "react";
-import s from "./App.module.css";
+import s from "./AppCSS/App.module.css";
+import logo from "./assets/diary.png";
+import "./AppCSS/root.css";
 import {
   createBrowserRouter,
   Link,
@@ -10,16 +12,23 @@ import {
 import ErrorPage from "./components/errorPage/errorPage";
 import { store, AppStateType } from "./redux/store";
 import { connect, Provider } from "react-redux";
-import Note from "./components/errorPage/Note/Note";
-import {
-  initializeApp,
-  notesActions,
-  NoteType,
-} from "./redux/reducers/notesReducer";
+
 import c from "classnames";
-import NavItem from "./components/errorPage/NavItem/NavItem";
-import { getFavoriteNotesSuperSelector, getIsInitializedSelector, getNotesSelector } from "./redux/selectors/notesSelectors";
-import SearchBlock from "./components/errorPage/SearchBlock/SearchBlock";
+import NavItem from "./components/NavItem/NavItem";
+import {
+  getFavoriteNotesSuperSelector,
+  getIsInitializedSelector,
+  getNotesSelector,
+} from "./redux/selectors/notesSelectors";
+import SearchBlock from "./components/SearchBlock/SearchBlock";
+import { NoteType } from "./types/types";
+import { notesActions } from "./redux/actions/notesActions";
+import { initializeApp } from "./redux/middleware/notesThunks";
+import Note from "./components/Note/Note";
+import Svgs from "./components/Svgs/Svgs";
+import Header from "./components/Header/Header";
+import Chart from "./components/Chart/Chart";
+import MainPage from "./components/MainPage/MainPage";
 
 type MSTPropsType = {
   notes: Array<NoteType> | null;
@@ -47,53 +56,72 @@ const Root: React.FC<PropsType> = ({
     initializeApp();
   }, [isInitialized]);
 
+  const [isSidebarShown, setIsSidebarShown] = useState(false);
+
+  const setShowingSidebar = (e?: any) => {
+    setIsSidebarShown(isSidebarShown ? false : true);
+  };
+
   const navItems =
     notes &&
     notes.map((item) => {
-      return <NavItem key={item.id} item={item} getNote={getNote}/>;
+      return (
+        <NavItem
+          key={item.id}
+          item={item}
+          getNote={getNote}
+          setOnClick={setShowingSidebar}
+        />
+      );
     });
 
-  const favoriteNavItems = 
+  const favoriteNavItems =
     favoriteNotes &&
     favoriteNotes.map((item) => (
-      <NavItem key={item.id} item={item} getNote={getNote}/>
+      <NavItem
+        key={item.id}
+        item={item}
+        getNote={getNote}
+        setOnClick={setShowingSidebar}
+      />
     ));
 
-  const [isFovoriteShown, setIsFovoriteShown] = useState(false);
+  const [isFavoriteShown, setIsFavoriteShown] = useState(false);
+
+  const location = useLocation();
 
   return (
     <div className={s.body}>
-      <header className={s.header}>
-        <div className="logo"></div>
-        <button className={c(s.headerButton, s.headerButtonSearch)}>
-          search
-        </button>
-        <button 
-          className={s.headerButton}
-          onClick={() => setIsFovoriteShown(
-            isFovoriteShown ? false : true
-          )}
-        >{isFovoriteShown ? "all" : "favorite"}</button>
-      </header>
-      <nav className={s.sidebar}>
+      <Svgs />
+      <Header
+        setIsSidebarShown={setIsSidebarShown}
+        setIsFavoriteShown={setIsFavoriteShown}
+        isFavoriteShown={isFavoriteShown}
+        isSidebarShown={isSidebarShown}
+        setShowingSidebar={setShowingSidebar}
+        location={location}
+      />
+      <nav className={c(s.sidebar, { [s.sidebarIsShown]: isSidebarShown })}>
         <div className="fiterBlock"></div>
-        <ul>
-          {isFovoriteShown ? favoriteNavItems : navItems}
-        </ul>
+        <ul>{isFavoriteShown ? favoriteNavItems : navItems}</ul>
       </nav>
-      <main className={s.main}>
-            <SearchBlock/>
-        <p className="appDiscription">
-          Lorem ipsum dolor sit, amet consectetur adipisicing elit. Mollitia
-          deleniti pariatur rerum fugit assumenda eligendi
-        </p>
-        <Link to={"notes/createNewNote"} onClick={() => getNote(0)}>
-          <button className="addNewDailyNote">create new one</button>
-        </Link>
-
-        <div className="notes">
-          <Outlet />
-        </div>
+      <main className={c(s.main, { [s.mainIsNotShown]: isSidebarShown })}>
+        {location.pathname === "/" ? 
+        // (
+        //   <div className={s.createBlock}>
+        //     <p className="appDiscription">
+        //       Lorem ipsum dolor sit, amet consectetur adipisicing elit. Mollitia
+        //       deleniti pariatur rerum fugit assumenda eligendi
+        //     </p>
+        //     <Link to={"notes/createNewNote"} onClick={() => getNote(0)}>
+        //       <button className="addNewDailyNote">create new one</button>
+        //     </Link>
+        //     <Chart/>
+        //   </div>
+        // )
+        <MainPage getNote={getNote}/>
+         : null}
+        <Outlet />
       </main>
     </div>
   );
@@ -124,6 +152,10 @@ const App: React.FC<PropsType> = (props) => {
         {
           path: "notes/createNewNote",
           element: <Note />,
+        },
+        {
+          path: "notes/search",
+          element: <SearchBlock />,
         },
       ],
     },

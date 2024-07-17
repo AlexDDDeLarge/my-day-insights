@@ -3,21 +3,21 @@ import s from "./Note.module.css";
 import { useForm } from "react-hook-form";
 import { connect } from "react-redux";
 import {
-  MoodType,
-  NoteType,
-  BasicNoteType,
-  changeNote,
-  addNewNote,
   removeNote,
+  addNewNote,
+  changeNote,
   changeIsFavorite,
-} from "../../../redux/reducers/notesReducer";
+} from "../../redux/middleware/notesThunks"
 import {
   getCreateModeSelector,
   getCurrentNoteSelector,
   getNotesSelector,
-} from "../../../redux/selectors/notesSelectors";
-import { AppStateType } from "../../../redux/store";
+} from "../../redux/selectors/notesSelectors";
+import { AppStateType } from "../../redux/store";
 import TextField from "./TextField/TextField";
+import { BasicNoteType, MoodType, NoteType } from "../../types/types";
+import { Link } from "react-router-dom";
+import CloseButton from "../CloseButton/CloseButton";
 
 type MSTPType = {
   note: NoteType | null;
@@ -75,6 +75,7 @@ const Note: React.FC<PropsType> = ({
     watch,
     reset,
     getValues,
+    setValue,
     formState: { errors },
   } = useForm({
     values: defaultValuesOfForm,
@@ -119,7 +120,7 @@ const Note: React.FC<PropsType> = ({
       <div className={s.note}>
         <form onSubmit={handleSubmit((data) => onSubmit(data))}>
           <header className="noteHead">
-            <p className="date">{date ? date : "New note"}</p>
+            <h1 className="date">{date ? date : "New note"}</h1>
             {!editMode && (
               <input
                 {...register("isFavorite")}
@@ -135,7 +136,6 @@ const Note: React.FC<PropsType> = ({
                 }}
               />
             )}
-            <button className="closeNote" onClick={(e) => e.preventDefault()}>close note</button>
             {note && (
               <button className="editNote" onClick={editModeOnClick}>
                 edit note
@@ -146,12 +146,14 @@ const Note: React.FC<PropsType> = ({
                 remove note
               </button>
             )}
+            <CloseButton/>
           </header>
 
           <h2 className="moodQuestion">What is your mood?</h2>
           <select
             {...register("mood", { required: "This is required." })}
             disabled={!!note && !editMode}
+            className={s.moodSelect}
           >
             <option value={"awful"}>awful</option>
             <option value={"bad"}>bad</option>
@@ -166,6 +168,7 @@ const Note: React.FC<PropsType> = ({
             name={"importantOccasion"}
             errors={errors}
             editMode={editMode}
+            setValue={setValue}
           />
           <TextField
             question={"What good thing happened today?"}
@@ -174,6 +177,7 @@ const Note: React.FC<PropsType> = ({
             name={"theDayGoodThings"}
             errors={errors}
             editMode={editMode}
+            setValue={setValue}
           />
           <TextField
             question={"What insights do you have today?"}
@@ -182,6 +186,7 @@ const Note: React.FC<PropsType> = ({
             name={"insights"}
             errors={errors}
             editMode={editMode}
+            setValue={setValue}
           />
           {!note && <input type="submit" value={"save"} />}
           {note && editMode && (

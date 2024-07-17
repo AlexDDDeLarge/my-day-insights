@@ -1,11 +1,4 @@
-import { MoodType, NoteType } from "../reducers/notesReducer";
-
-export type SearchWhereType =
-  | "all"
-  | "mood"
-  | "importantOccasion"
-  | "theDayGoodThings"
-  | "insights";
+import { MoodType, NoteType, SearchWhereType } from "../../types/types";
 
 export const notesActions = {
   initialize: () => ({
@@ -64,9 +57,3 @@ export const notesActions = {
     where,
   }),
 };
-
-export type NotesActionType = typeof notesActions;
-
-export type ActionsType<T> = T extends { [key: string]: infer U }
-  ? ReturnType<U extends (...args: any) => any ? U : never>
-  : never;

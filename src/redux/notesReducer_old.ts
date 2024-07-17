@@ -1,4 +1,19 @@
-import { ActionsType, NotesActionType, NoteType } from "../../types/types";
+import { apiLocalStorage } from "../api/api";
+
+export type MoodType = "awful" | "bad" | "calm" | "good" | "happy";
+
+export type BasicNoteType = {
+  isFavorite: boolean;
+  mood: MoodType;
+  importantOccasion: string;
+  theDayGoodThings: string;
+  insights: string;
+};
+
+export type NoteType = {
+  id: number;
+  date: string;
+} & BasicNoteType;
 
 type StateType = {
   notes: Array<NoteType> | null;
@@ -61,19 +76,18 @@ export const notesReducer = (
       }${currentDate.getMonth()}.${currentDate.getFullYear()} 
         ${weekDay} ${currentDate.getHours()}:${currentDate.getMinutes()}
       `;
-      const noteId = `${currentDate.getSeconds()}${currentDate.getMinutes()}${currentDate.getHours()}${currentDate.getDate()}${currentDate.getMonth()}${currentDate.getFullYear()}`;
       return {
         ...state,
         notes: [
           {
             date: dataValue,
-            chartDate: {
-              day: weekDay,
-              date: currentDate.getDate(),
-              month: currentDate.getMonth(),
-              year: currentDate.getFullYear(),
-            },
-            id: Number(noteId),
+            id:
+              currentDate.getSeconds() +
+              currentDate.getMinutes() +
+              currentDate.getHours() +
+              currentDate.getDate() +
+              currentDate.getMonth() +
+              currentDate.getFullYear(),
             ...action.data,
           },
           ...(state.notes as Array<NoteType>),
@@ -162,3 +176,125 @@ export const notesReducer = (
       return state;
   }
 };
+
+export type SearchWhereType =
+  | "all"
+  | "mood"
+  | "importantOccasion"
+  | "theDayGoodThings"
+  | "insights";
+
+export const notesActions = {
+  initialize: () => ({
+    type: "NOTES-INITIALIZE" as const,
+  }),
+  setAllNotes: (notes: Array<NoteType> | null) => ({
+    type: "NOTES-SET-ALL-NOTES" as const,
+    notes,
+  }),
+  createDailyNote: (
+    isFavorite: boolean,
+    mood: MoodType,
+    importantOccasion: string,
+    theDayGoodThings: string,
+    insights: string
+  ) => ({
+    type: "NOTES-CREATE-DAILY-NOTE" as const,
+    data: {
+      isFavorite,
+      mood,
+      importantOccasion,
+      theDayGoodThings,
+      insights,
+    },
+  }),
+  getNote: (id: number) => ({
+    type: "NOTES-GET-NOTE" as const,
+    id,
+  }),
+  editNote: (
+    id: number,
+    payload: {
+      isFavorite: boolean;
+      mood: MoodType;
+      importantOccasion: string;
+      theDayGoodThings: string;
+      insights: string;
+    }
+  ) => ({
+    type: "NOTES-EDIT-NOTE" as const,
+    id,
+    payload,
+  }),
+  changeIsFavorite: (id: number, isFavorite: boolean) => ({
+    type: "NOTES-CHANGE-IS-FAVORITE" as const,
+    id,
+    isFavorite,
+  }),
+  removeNote: (id: number) => ({
+    type: "NOTES-REMOVE-NOTE" as const,
+    id,
+  }),
+  search: (text: string, where: SearchWhereType) => ({
+    type: "NOTES-SEARCH" as const,
+    text,
+    where,
+  }),
+};
+
+export type NotesActionType = typeof notesActions;
+
+export type ActionsType<T> = T extends { [key: string]: infer U }
+  ? ReturnType<U extends (...args: any) => any ? U : never>
+  : never;
+
+const updateNotes = () => (dispatch: any, getState: any) => {
+  apiLocalStorage.updateNotes(getState().notesReducer.notes);
+  const notes: Array<NoteType> | null = apiLocalStorage.getAllNotes();
+  dispatch(notesActions.setAllNotes(notes));
+};
+
+export const initializeApp = () => (dispatch: any) => {
+  const notes: Array<NoteType> | null = apiLocalStorage.getAllNotes();
+  dispatch(notesActions.setAllNotes(notes));
+  dispatch(notesActions.initialize());
+};
+
+export const addNewNote =
+  (
+    isFavorite: boolean,
+    mood: MoodType,
+    importantOccasion: string,
+    theDayGoodThings: string,
+    insights: string
+  ) =>
+  (dispatch: any, getState: any) => {
+    dispatch(
+      notesActions.createDailyNote(
+        isFavorite,
+        mood,
+        importantOccasion,
+        theDayGoodThings,
+        insights
+      )
+    );
+    dispatch(updateNotes());
+  };
+
+export const changeNote =
+  (id: number, payload: BasicNoteType) => (dispatch: any) => {
+    dispatch(notesActions.editNote(id, payload));
+    dispatch(notesActions.getNote(id));
+  };
+
+export const removeNote = (id: number) => (dispatch: any, getState: any) => {
+  dispatch(notesActions.removeNote(id));
+  dispatch(updateNotes());
+};
+
+export const changeIsFavorite =
+  (id: number, isFavorite: boolean) => (dispatch: any, getState: any) => {
+    dispatch(notesActions.changeIsFavorite(id, isFavorite));
+    dispatch(updateNotes());
+    dispatch(notesActions.getNote(id));
+  };

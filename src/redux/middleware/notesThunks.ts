@@ -1,6 +1,6 @@
 import { apiLocalStorage } from "../../api/api";
+import { BasicNoteType, MoodType, NoteType } from "../../types/types";
 import { notesActions } from "../actions/notesActions";
-import { BasicNoteType, MoodType, NoteType } from "../reducers/notesReducer";
 
 const updateNotes = () => (dispatch: any, getState: any) => {
   apiLocalStorage.updateNotes(getState().notesReducer.notes);
